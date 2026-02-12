@@ -1,35 +1,38 @@
 import express from "express";
 import Product from "../models/Product.js";
-import { protect, adminOnly } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Get all products
+
+// ✅ Get all products
 router.get("/", async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// Create product (Admin only)
-router.post("/", protect, adminOnly, async (req, res) => {
-  const product = await Product.create(req.body);
-  res.json(product);
+
+// ✅ Create product
+router.post("/", async (req, res) => {
+  try {
+    const { name, price, description } = req.body;
+
+    const product = new Product({
+      name,
+      price,
+      description,
+    });
+
+    const savedProduct = await product.save();
+    res.status(201).json(savedProduct);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// Update product
-router.put("/:id", protect, adminOnly, async (req, res) => {
-  const updated = await Product.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  res.json(updated);
-});
-
-// Delete product
-router.delete("/:id", protect, adminOnly, async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: "Product deleted" });
-});
 
 export default router;

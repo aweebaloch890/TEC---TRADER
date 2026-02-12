@@ -1,10 +1,14 @@
 {
   "name": "tec-trader-server",
   "version": "1.0.0",
+  "description": "TEC Trader Backend API",
   "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

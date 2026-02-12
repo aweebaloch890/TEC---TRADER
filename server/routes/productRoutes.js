@@ -3,8 +3,7 @@ import Product from "../models/Product.js";
 
 const router = express.Router();
 
-
-// ✅ Get all products
+// Get all products
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
@@ -14,25 +13,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-
-// ✅ Create product
+// Create product
 router.post("/", async (req, res) => {
   try {
-    const { name, price, description } = req.body;
-
-    const product = new Product({
-      name,
-      price,
-      description,
-    });
-
+    const product = new Product(req.body);
     const savedProduct = await product.save();
     res.status(201).json(savedProduct);
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 export default router;
